@@ -1,0 +1,148 @@
+AQUARIUM EAST BOTTOM - EDA NUMBERS (after negative-DO fix)
+==============================================================
+17,664 rows x 13 columns
+
+Columns as downloaded:
+  'Sample_date'
+  'Sample_Time'
+  'DateTime'
+  'Station'
+  'Layer'
+  'Salinity_ppt'
+  'pH'
+  'DO_mg/L'
+  'DO_pctSat'
+  'Turb_NTU'
+  'Chl_ug/L'
+  'BGA_RFU'
+  'Temp_C'
+Station: ['Patapsco River  - Aquarium East Bottom']
+Layer:   ['B']   (B = bottom, S = surface, BS = below surface)
+
+Features kept   : ['WTEMP', 'SALINITY', 'DO', 'DOSAT', 'PH', 'TURB', 'CHLA']
+Dropped (empty) : ['BGA']
+Date range   : 2024-04-01 00:00:00  to  2024-10-01 23:45:00
+Rows         : 17,664
+Expected rows: 17,664   (at one reading per 15 min)
+Completeness : 100.00%
+Duplicate timestamps: 0
+
+Interval between consecutive rows (minutes):
+timestamp
+15.0    17663
+ feature    units   dtype     nature
+   WTEMP     degC float64 continuous
+SALINITY      ppt float64 continuous
+      DO     mg/L float64 continuous
+   DOSAT        % float64 continuous
+      PH unitless float64 continuous
+    TURB      NTU float64 continuous
+    CHLA     ug/L float64 continuous
+
+Also available, NOT continuous:
+  Station   - categorical
+  Layer     - categorical
+  timestamp - datetime; hour-of-day and day-of-year are cyclical,
+              to be encoded as sin/cos pairs rather than integers
+
+TARGET VARIABLE: DO (dissolved oxygen, mg/L) shifted forward by the
+forecast horizon. Continuous -> regression.
+Secondary framing: DO < 2 mg/L (hypoxia). Binary -> classification.
+
+            count    mean     std    min     25%     50%     75%      max
+WTEMP     17657.0  22.532   5.648  8.798  18.658  25.024  27.101   30.142
+SALINITY  17652.0   6.160   2.258  2.210   4.950   5.990   6.950   13.750
+DO        13689.0   2.746   2.810 -0.120   0.100   1.860   5.090   13.370
+DOSAT     13695.0  30.979  31.327 -1.300   1.200  22.100  56.150  133.800
+PH        17657.0   7.282   0.341  6.590   7.070   7.180   7.400    8.640
+TURB      16617.0   5.265   5.880 -0.170   2.740   3.820   5.900  169.480
+CHLA      17649.0   6.578   6.409  0.250   1.740   3.770  10.100   74.880
+          n_missing     pct
+WTEMP             7   0.040
+SALINITY         12   0.068
+DO             3975  22.503
+DOSAT          3969  22.469
+PH                7   0.040
+TURB           1047   5.927
+CHLA             15   0.085
+
+Contiguous gap blocks in DO : 221
+Longest gap                 : 504 rows (126.0 hours)
+Blocks <= 2h (interpolable) : 173
+Blocks  > 2h (exclude)      : 48
+ feature plausible_range  observed_min  observed_max  n_outside
+   WTEMP        [-2, 40]         8.798        30.142          0
+SALINITY         [0, 40]         2.210        13.750          0
+      DO        [-1, 25]        -0.120        13.370          0
+   DOSAT      [-10, 250]        -1.300       133.800          0
+      PH         [3, 12]         6.590         8.640          0
+    TURB       [0, 2000]        -0.170       169.480         31
+    CHLA        [0, 500]         0.250        74.880          0
+
+DO: clipped 2,769 negative readings up to 0 (lowest was -0.12). Anoxic, not faulty.
+DOSAT: clipped 2,790 negative readings up to 0 (lowest was -1.30). Anoxic, not faulty.
+PEARSON
+          WTEMP  SALINITY     DO  DOSAT     PH   TURB   CHLA
+WTEMP     1.000     0.317 -0.399 -0.294  0.010  0.185 -0.214
+SALINITY  0.317     1.000 -0.347 -0.275 -0.097  0.118 -0.588
+DO       -0.399    -0.347  1.000  0.987  0.788 -0.268  0.351
+DOSAT    -0.294    -0.275  0.987  1.000  0.839 -0.263  0.326
+PH        0.010    -0.097  0.788  0.839  1.000 -0.052  0.229
+TURB      0.185     0.118 -0.268 -0.263 -0.052  1.000  0.010
+CHLA     -0.214    -0.588  0.351  0.326  0.229  0.010  1.000
+
+SPEARMAN
+          WTEMP  SALINITY     DO  DOSAT     PH   TURB   CHLA
+WTEMP     1.000     0.278 -0.514 -0.450 -0.124  0.234 -0.162
+SALINITY  0.278     1.000 -0.401 -0.360 -0.107  0.176 -0.674
+DO       -0.514    -0.401  1.000  0.994  0.743 -0.531  0.325
+DOSAT    -0.450    -0.360  0.994  1.000  0.768 -0.526  0.304
+PH       -0.124    -0.107  0.743  0.768  1.000 -0.220  0.118
+TURB      0.234     0.176 -0.531 -0.526 -0.220  1.000 -0.085
+CHLA     -0.162    -0.674  0.325  0.304  0.118 -0.085  1.000
+
+Pairs where |Pearson - Spearman| > 0.10  (non-linear relationship):
+  WTEMP x DO:  Pearson -0.399   Spearman -0.514   diff 0.115
+  WTEMP x DOSAT:  Pearson -0.294   Spearman -0.450   diff 0.156
+  WTEMP x PH:  Pearson +0.010   Spearman -0.124   diff 0.134
+  DO x TURB:  Pearson -0.268   Spearman -0.531   diff 0.263
+  DOSAT x TURB:  Pearson -0.263   Spearman -0.526   diff 0.263
+  PH x TURB:  Pearson -0.052   Spearman -0.220   diff 0.169
+  PH x CHLA:  Pearson +0.229   Spearman +0.118   diff 0.111
+
+Pairs with |Pearson| > 0.80  (collinearity to resolve):
+  DO x DOSAT:  r = +0.987
+  DOSAT x PH:  r = +0.839
+Correlation of each feature with DO h hours ahead:
+             1h     3h     6h    12h    24h
+WTEMP    -0.401 -0.406 -0.414 -0.432 -0.475
+SALINITY -0.341 -0.331 -0.310 -0.262 -0.155
+DO        0.979  0.953  0.915  0.842  0.689
+DOSAT     0.965  0.937  0.896  0.819  0.664
+PH        0.769  0.743  0.702  0.623  0.461
+TURB     -0.264 -0.254 -0.235 -0.203 -0.128
+CHLA      0.339  0.329  0.316  0.293  0.234
+DO standard deviation: 2.801 mg/L
+
+ horizon      RMSE       MAE   -20% target         n
+     1h     0.581     0.370         0.465    13,300
+     3h     0.864     0.558         0.691    13,123
+     6h     1.163     0.746         0.931    12,988
+    12h     1.592     1.025         1.273    12,773
+    24h     2.248     1.479         1.798    12,335
+
+RMSE and MAE in mg/L. The -20% column is what our model must reach
+to claim a 20% improvement over persistence.
+Observed minimum DO: 0.00 mg/L
+Valid readings: 13,689 of 17,664 rows
+
+  DO < 0.5 mg/L :  4,611 rows (33.68% of valid)
+  DO < 1.0 mg/L :  5,638 rows (41.19% of valid)
+  DO < 2.0 mg/L :  7,005 rows (51.17% of valid)  <- hypoxia threshold
+  DO < 3.0 mg/L :  8,259 rows (60.33% of valid)
+  DO < 5.0 mg/L : 10,154 rows (74.18% of valid)  <- Bay open-water criterion
+
+Class balance for binary classification: 51.2% positive
+
+Percentages are of VALID readings, not of all rows. A row where the sensor
+recorded nothing is neither hypoxic nor not-hypoxic.
