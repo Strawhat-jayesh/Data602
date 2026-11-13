@@ -1,0 +1,137 @@
+[
+  {
+    "horizon": "1h",
+    "folds": [
+      {
+        "fold": 1,
+        "gbm_rmse": 0.59,
+        "persistence_rmse": 0.547
+      },
+      {
+        "fold": 2,
+        "gbm_rmse": 0.256,
+        "persistence_rmse": 0.159
+      },
+      {
+        "fold": 3,
+        "gbm_rmse": 0.521,
+        "persistence_rmse": 0.495
+      },
+      {
+        "fold": 4,
+        "gbm_rmse": 0.789,
+        "persistence_rmse": 0.7
+      }
+    ],
+    "mean_gbm": 0.539,
+    "mean_persistence": 0.475
+  },
+  {
+    "horizon": "3h",
+    "folds": [
+      {
+        "fold": 1,
+        "gbm_rmse": 0.936,
+        "persistence_rmse": 0.939
+      },
+      {
+        "fold": 2,
+        "gbm_rmse": 0.34,
+        "persistence_rmse": 0.261
+      },
+      {
+        "fold": 3,
+        "gbm_rmse": 0.965,
+        "persistence_rmse": 0.844
+      },
+      {
+        "fold": 4,
+        "gbm_rmse": 1.385,
+        "persistence_rmse": 1.222
+      }
+    ],
+    "mean_gbm": 0.907,
+    "mean_persistence": 0.817
+  },
+  {
+    "horizon": "6h",
+    "folds": [
+      {
+        "fold": 1,
+        "gbm_rmse": 1.111,
+        "persistence_rmse": 1.057
+      },
+      {
+        "fold": 2,
+        "gbm_rmse": 0.691,
+        "persistence_rmse": 0.349
+      },
+      {
+        "fold": 3,
+        "gbm_rmse": 1.398,
+        "persistence_rmse": 1.209
+      },
+      {
+        "fold": 4,
+        "gbm_rmse": 2.028,
+        "persistence_rmse": 1.842
+      }
+    ],
+    "mean_gbm": 1.307,
+    "mean_persistence": 1.114
+  },
+  {
+    "horizon": "12h",
+    "folds": [
+      {
+        "fold": 1,
+        "gbm_rmse": 1.398,
+        "persistence_rmse": 1.237
+      },
+      {
+        "fold": 2,
+        "gbm_rmse": 0.765,
+        "persistence_rmse": 0.459
+      },
+      {
+        "fold": 3,
+        "gbm_rmse": 2.136,
+        "persistence_rmse": 1.681
+      },
+      {
+        "fold": 4,
+        "gbm_rmse": 2.226,
+        "persistence_rmse": 2.283
+      }
+    ],
+    "mean_gbm": 1.631,
+    "mean_persistence": 1.415
+  },
+  {
+    "horizon": "24h",
+    "folds": [
+      {
+        "fold": 1,
+        "gbm_rmse": 1.944,
+        "persistence_rmse": 1.345
+      },
+      {
+        "fold": 2,
+        "gbm_rmse": 1.86,
+        "persistence_rmse": 0.668
+      },
+      {
+        "fold": 3,
+        "gbm_rmse": 2.881,
+        "persistence_rmse": 2.328
+      },
+      {
+        "fold": 4,
+        "gbm_rmse": 2.793,
+        "persistence_rmse": 2.551
+      }
+    ],
+    "mean_gbm": 2.37,
+    "mean_persistence": 1.723
+  }
+]

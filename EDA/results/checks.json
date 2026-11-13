@@ -1,0 +1,25 @@
+{
+  "rows": 17664,
+  "rows_with_do": 13689,
+  "expected_rows_apr1_oct1_2024": 17664,
+  "valid_date_share": 1.0,
+  "gaps_not_15min": 0,
+  "date_min": "2024-04-01 00:00:00",
+  "date_max": "2024-10-01 23:45:00",
+  "do_negative": 2769,
+  "do_hypoxic_lt2": 7005,
+  "missing_pct": {
+    "sal": 0.07,
+    "ph": 0.04,
+    "do": 22.5,
+    "do_sat": 22.47,
+    "turb": 5.93,
+    "chl": 0.08,
+    "temp": 0.04
+  },
+  "corr_do_sat_vs_do": 0.988,
+  "corr_sat_vs_ph": 0.838,
+  "acf_6h": 0.915,
+  "acf_12h": 0.842,
+  "acf_24h": 0.69
+}

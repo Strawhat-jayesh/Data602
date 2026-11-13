@@ -1,0 +1,50 @@
+{
+  "pca_explained_variance_ratio": [
+    0.415,
+    0.228,
+    0.173,
+    0.111
+  ],
+  "pca_loadings_pc1": {
+    "do": 0.54,
+    "sal": -0.438,
+    "ph": 0.374,
+    "turb": -0.215,
+    "chl": 0.467,
+    "temp": -0.335
+  },
+  "clusters": [
+    {
+      "cluster": 0,
+      "share_pct": 35.7,
+      "mean_do": 3.7,
+      "mean_temp": 15.72,
+      "mean_sal": 4.03,
+      "pct_hypoxic": 30.7
+    },
+    {
+      "cluster": 1,
+      "share_pct": 15.7,
+      "mean_do": 6.96,
+      "mean_temp": 23.12,
+      "mean_sal": 5.35,
+      "pct_hypoxic": 0.0
+    },
+    {
+      "cluster": 2,
+      "share_pct": 47.1,
+      "mean_do": 1.17,
+      "mean_temp": 25.43,
+      "mean_sal": 6.56,
+      "pct_hypoxic": 73.9
+    },
+    {
+      "cluster": 3,
+      "share_pct": 1.5,
+      "mean_do": 0.98,
+      "mean_temp": 26.84,
+      "mean_sal": 7.32,
+      "pct_hypoxic": 94.1
+    }
+  ]
+}
