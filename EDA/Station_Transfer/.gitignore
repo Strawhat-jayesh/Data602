@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.DS_Store
+# Keep only the five result tables used by Section 13.
+results/*
+!results/evaluation_metrics.csv
+!results/selected_families.csv
+!results/paired_mae_differences.csv
+!results/cleaning_policy_comparison.csv
+!results/fit_diagnostics.csv
