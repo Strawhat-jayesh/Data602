@@ -18,7 +18,7 @@ from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegresso
 from sklearn.compose import TransformedTargetRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import Ridge, LinearRegression
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, r2_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.tree import DecisionTreeRegressor
@@ -119,6 +119,29 @@ def make_features(data, input_set, redundant=False):
     return x
 
 
+def describe_features(data):
+    feature_meanings = {'do': 'Current DO (mg/L)'}
+    for lag in (1, 2, 4, 8, 16, 32):
+        feature_meanings[f'do_lag{lag}'] = f'DO {lag * 15} minutes earlier (mg/L)'
+    feature_meanings.update({
+        'do_roll16_mean': 'Trailing 4-hour mean DO (mg/L)',
+        'do_roll96_mean': 'Trailing 24-hour mean DO (mg/L)',
+        'do_diff1': 'DO change over 15 minutes (mg/L)',
+        'do_diff4': 'DO change over 1 hour (mg/L)',
+        'temp_diff4': 'Temperature change over 1 hour (°C)'})
+    environment = {'sal': 'Salinity (ppt)', 'ph': 'pH', 'turb': 'Turbidity (exported units)',
+                   'chl': 'Chlorophyll (µg/L)', 'temp': 'Temperature (°C)'}
+    for variable, meaning in environment.items():
+        feature_meanings[variable] = 'Current ' + meaning
+        for lag in (4, 16):
+            feature_meanings[f'{variable}_lag{lag}'] = f'{meaning}, {lag // 4} hours earlier'
+    missing = set(data.columns) - set(feature_meanings)
+    if missing:
+        raise ValueError(f'No descriptions for features: {sorted(missing)}')
+    return pd.DataFrame({'Predictor': data.columns,
+                         'Meaning': [feature_meanings[c] for c in data.columns]})
+
+
 def target_at(data, hours):
     targets = data.index + pd.Timedelta(hours=hours)
     return pd.Series(data.do.reindex(targets).to_numpy(), index=data.index), targets
@@ -188,13 +211,14 @@ def fit_predict(data, hours, features, name, params, train, test):
 def scores(actual, pred):
     actual, pred = np.asarray(actual), np.asarray(pred)
     if len(actual) == 0:
-        return {'n': 0, 'mae': None, 'rmse': None}
+        return {'n': 0, 'mae': None, 'rmse': None, 'r2': None}
+    r2 = None if len(actual) < 2 or np.all(actual == actual[0]) else float(r2_score(actual, pred))
     return {'n': len(actual), 'mae': float(np.abs(actual-pred).mean()),
-            'rmse': float(np.sqrt(np.square(actual-pred).mean()))}
+            'rmse': float(np.sqrt(np.square(actual-pred).mean())), 'r2': r2}
 
 
-def detection(actual, pred):
-    tn, fp, fn, tp = confusion_matrix(np.asarray(actual)<2, np.asarray(pred)<2, labels=[False, True]).ravel()
+def detection(actual, pred, threshold=2):
+    tn, fp, fn, tp = confusion_matrix(np.asarray(actual)<threshold, np.asarray(pred)<threshold, labels=[False, True]).ravel()
     ratio = lambda a,b: float(a/b) if b else None
     return {'true_negative': int(tn), 'false_positive': int(fp), 'false_negative': int(fn),
             'true_positive': int(tp), 'precision': ratio(tp,tp+fp), 'recall': ratio(tp,tp+fn),
